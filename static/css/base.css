@@ -1,0 +1,8 @@
+div {
+    font-size: large;
+    background-color: RGB(240, 240, 240);
+    border: 2px solid RGB(220, 220, 220);
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+}
