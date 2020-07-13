@@ -3,6 +3,6 @@
 {% block content %}
     <h3>Заголовок</h3>
     <div class="basic_block">
-        Контент страницы
+        Текущий пользователь: {{ user }} ({{ user.first_name }} {{ user.last_name }})
     </div>
 {% endblock %}
