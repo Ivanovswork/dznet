@@ -1,8 +1,9 @@
-div {
-    font-size: large;
+.basic_block {
+    font-style: normal;
     background-color: RGB(240, 240, 240);
     border: 2px solid RGB(220, 220, 220);
     border-radius: 5px;
-    margin: 10px;
+    margin: 10px auto;
+    width: 800px;
     padding: 10px;
 }

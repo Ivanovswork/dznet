@@ -9,8 +9,21 @@
 </head>
 <body>
 
+{% block header %}
+    <div class="basic_block" style="height: 1em">
+        <div style="float: left; display: inline-block; vertical-align: center"><b>PyChat</b></div>
+        {% if user.is_authenticated %}
+            <div style="float: right; display: inline-block; vertical-align: center">{{ user }}</div>
+        {% else %}
+            <div style="float: right; display: inline-block; vertical-align: center">
+                <a href="{% url 'login' %}">Войти</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock header %}
+
 {% block content %}
-{% endblock %}
+{% endblock content %}
 
 </body>
 </html>
