@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from .serializers import UserSerializer
 
 
@@ -16,3 +16,7 @@ class UserViewSet(ReadOnlyModelViewSet):
 
 class Login(LoginView):
     template_name = 'chat/login.html'
+
+
+class Logout(LogoutView):
+    next_page = 'index'
