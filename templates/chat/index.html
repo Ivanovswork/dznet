@@ -1,9 +1,28 @@
 {% extends 'layout/base_template.html' %}
 
 {% block content %}
+    <style>
+        #users_block {
+            position: relative;
+            top: 10px;
+            left: 10px;
+            width: 150px;
+            height: 400px;
+            overflow: auto;
+            background-color: RGB(255, 255, 255);
+            border: 2px solid RGB(220, 220, 220);
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+
     {% if user.is_authenticated %}
-        <div class="basic_block">
-            Окно чата
+        <div class="basic_block" style="height: 700px">
+            <div id="users_block">
+                {% for element in user_list %}
+                    {{ element.get_full_name }}<br>
+                {% endfor %}
+            </div>
         </div>
     {% endif %}
 {% endblock %}

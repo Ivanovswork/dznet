@@ -23,8 +23,8 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, 'chat/index.html', context={})
 
-    users = User.objects.all()
-    context = {'users': users}
+    user_list = User.objects.all()
+    context = {'user_list': user_list}
     return render(request, 'chat/index.html', context=context)
 
 
