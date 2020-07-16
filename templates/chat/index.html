@@ -2,27 +2,103 @@
 
 {% block content %}
     <style>
-        #users_block {
-            position: relative;
-            top: 10px;
-            left: 10px;
-            width: 150px;
-            height: 400px;
+        div.inner_div {
             overflow: auto;
             background-color: RGB(255, 255, 255);
             border: 2px solid RGB(220, 220, 220);
             border-radius: 5px;
             padding: 10px;
         }
+
+        #users_block {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 150px;
+            height: 675px;
+        }
+
+        #messages_block {
+            position: absolute;
+            top: 10px;
+            left: 195px;
+            width: 590px;
+            height: 620px;
+        }
+
+        #sender_block {
+            position: absolute;
+            top: 665px;
+            left: 195px;
+            width: 590px;
+            height: 19px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        p.user_block {
+            border: 1px solid RGB(230, 230, 230);
+            background-color: RGB(240, 240, 240);
+            border-radius: 3px;
+            padding: 10px;
+        }
+
+        p.message_block {
+            border: 1px solid RGB(230, 230, 230);
+            background-color: RGB(240, 240, 240);
+            border-radius: 3px;
+            padding: 5px;
+            margin: 10px;
+        }
+
+        input {
+            border: 2px solid RGB(180, 180, 180);
+            border-radius: 2px;
+        }
     </style>
 
     {% if user.is_authenticated %}
-        <div class="basic_block" style="height: 700px">
-            <div id="users_block">
+        <div class="basic_block" style="height: 700px; position: relative;">
+            <div id="users_block" class="inner_div">
                 {% for element in user_list %}
-                    {{ element.get_full_name }}<br>
+                    <p class="user_block">
+                        <a href="javascript: show()">
+                            {% if element.first_name or element.last_name %}
+                                {{ element.get_full_name }}
+                            {% else %}
+                                {{ element.username }}
+                            {% endif %}
+                        </a>
+                    </p>
                 {% endfor %}
+            </div>
+            <div id="messages_block" class="inner_div">
+                {% for element in message_list %}
+                    <p class="message_block">
+                        <b>
+                            {{ element.dt }}<br>
+                            {% if element.sender.first_name or element.sender.last_name %}
+                                {{ element.sender.get_full_name }}<br>
+                            {% else %}
+                                {{ element.sender.username }}<br>
+                            {% endif %}
+                        </b>
+                        {{ element.text }}<br>
+                    </p>
+                {% endfor %}
+            </div>
+            <div id="sender_block" class="inner_div">
+                <input type="text" size="75" name="message_text">
+                <button id="send_button">Отправить</button>
             </div>
         </div>
     {% endif %}
+
+    <script>
+        function show() {
+            alert('Выбран пользователь!')
+        }
+    </script>
 {% endblock %}

@@ -24,7 +24,24 @@ def index(request):
         return render(request, 'chat/index.html', context={})
 
     user_list = User.objects.all()
-    context = {'user_list': user_list}
+
+    # Тестовый код для генерирования сообщений
+    import random
+    from datetime import datetime
+    message_list = []
+    for _ in range(50):
+        message_list.append(
+            {
+                'dt': datetime.now(),
+                'text': 'Тестовое сообщение для проверки отображения сообщений. В том числе с длинным текстом',
+                'sender': random.choice(user_list)
+            }
+        )
+
+    context = {
+        'user_list': user_list,
+        'message_list': message_list
+    }
     return render(request, 'chat/index.html', context=context)
 
 
