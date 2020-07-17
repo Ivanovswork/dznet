@@ -70,7 +70,7 @@
             <div id="users_block" class="inner_div">
                 {% for element in user_list %}
                     <p class="user_block">
-                        <a href="javascript: show({{ user.pk }}, {{ element.pk }})">
+                        <a href="javascript: show({{ element.pk }})">
                             {% if element.first_name or element.last_name %}
                                 {{ element.get_full_name }}
                             {% else %}
@@ -94,8 +94,10 @@
     {% endif %}
 
     <script>
-        function show(sender, receiver) {
-            alert('Выбран пользователь! Отправитель: ' + sender + ' Получатель: ' + receiver)
+        function show(receiver) {
+            let sender = {{ user.pk }};
+            let current_token = "{{ current_token }}";
+            alert('Выбран пользователь! Отправитель: ' + sender + ' Получатель: ' + receiver + ' Токен: ' + current_token)
         }
     </script>
 {% endblock %}

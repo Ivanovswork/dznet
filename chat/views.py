@@ -25,10 +25,12 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, 'chat/index.html', context={})
 
+    current_token = get_token(request.user)
     user_list = list(User.objects.all())
     user_list.sort(key=lambda x: x.get_full_name() if x.get_full_name() else x.username)
     context = {
         'user_list': user_list,
+        'current_token': current_token
     }
     return render(request, 'chat/index.html', context=context)
 
