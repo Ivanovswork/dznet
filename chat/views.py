@@ -3,11 +3,13 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import BasicAuthentication, TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
-from .serializers import UserSerializer
+from .serializers import UserSerializer, MessageSerializer
+from .models import Message
 
 
 def get_token(user, refresh=False):
@@ -25,23 +27,8 @@ def index(request):
 
     user_list = list(User.objects.all())
     user_list.sort(key=lambda x: x.get_full_name() if x.get_full_name() else x.username)
-
-    # Тестовый код для генерирования сообщений
-    import random
-    from datetime import datetime
-    message_list = []
-    for _ in range(50):
-        message_list.append(
-            {
-                'dt': datetime.now(),
-                'text': 'Тестовое сообщение для проверки отображения сообщений. В том числе с длинным текстом',
-                'sender': random.choice(user_list)
-            }
-        )
-
     context = {
         'user_list': user_list,
-        'message_list': message_list
     }
     return render(request, 'chat/index.html', context=context)
 
@@ -77,3 +64,27 @@ class UserViewSet(ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+
+class MessageView(ListCreateAPIView):
+    """Контроллер для работы с сообщениями"""
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = MessageSerializer
+
+    def get_queryset(self):
+        queryset = Message.objects.all()
+
+        sender_id = self.request.query_params.get('sender_id')
+        receiver_id = self.request.query_params.get('receiver_id')
+        begin_id = self.request.query_params.get('begin_id')
+
+        if sender_id:
+            queryset = queryset.filter(sender_id=sender_id)
+        if receiver_id:
+            queryset = queryset.filter(receiver_id=receiver_id)
+        if begin_id:
+            queryset = queryset.filter(pk__gt=begin_id)
+
+        return queryset

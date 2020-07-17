@@ -9,9 +9,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Команда для тестирования: она удаляет все сообщения из БД и заполняет её тестовыми сообщениями"""
 
+        print('Начинаю работу...')
+
         # Удаляем все старые сообщения из базы
         Message.objects.all().delete()
+        print('База очищена...')
 
+        print('Добавляю сообщения в базу...')
         users = list(User.objects.all())
         for _ in range(len(users) * 50):
             sender = random.choice(users)
@@ -23,3 +27,5 @@ class Command(BaseCommand):
                 sender=sender,
                 receiver=receiver
             )
+
+        print('Работа завершена...')
