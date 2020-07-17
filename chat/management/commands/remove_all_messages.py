@@ -5,5 +5,5 @@ from chat.models import Message
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        Message.objects.all()
+        Message.objects.all().delete()
         print('Все сообщения удалены...')
