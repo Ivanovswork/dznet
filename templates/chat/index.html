@@ -66,10 +66,11 @@
 
     {% if user.is_authenticated %}
         <div class="basic_block" style="height: 700px; position: relative;">
+
             <div id="users_block" class="inner_div">
                 {% for element in user_list %}
                     <p class="user_block">
-                        <a href="javascript: show()">
+                        <a href="javascript: show({{ element.pk }})" user_id="{{ element.pk }}">
                             {% if element.first_name or element.last_name %}
                                 {{ element.get_full_name }}
                             {% else %}
@@ -79,31 +80,22 @@
                     </p>
                 {% endfor %}
             </div>
+
             <div id="messages_block" class="inner_div">
-                {% for element in message_list %}
-                    <p class="message_block">
-                        <b>
-                            {{ element.dt }}<br>
-                            {% if element.sender.first_name or element.sender.last_name %}
-                                {{ element.sender.get_full_name }}<br>
-                            {% else %}
-                                {{ element.sender.username }}<br>
-                            {% endif %}
-                        </b>
-                        {{ element.text }}<br>
-                    </p>
-                {% endfor %}
+                Здесь будут выводиться сообщения
             </div>
+
             <div id="sender_block" class="inner_div">
                 <input type="text" size="75" name="message_text">
                 <button id="send_button">Отправить</button>
             </div>
+
         </div>
     {% endif %}
 
     <script>
-        function show() {
-            alert('Выбран пользователь!')
+        function show(id) {
+            alert('Выбран пользователь! ' + id)
         }
     </script>
 {% endblock %}
