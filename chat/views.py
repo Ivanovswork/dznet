@@ -90,13 +90,3 @@ class MessageView(ListCreateAPIView):
             queryset = queryset.filter(pk__gt=begin_id)
 
         return queryset
-
-    def list(self, request, *args, **kwargs):
-        # Блок диагностических сообщений
-        # print('Пришел запрос в метод получения списка сообщений...')
-        # print('is_ajax() ', request.is_ajax())
-        # print('META:')
-        # for k, v in request.META.items():
-        #     print('  - ', k, ' = ', v)
-
-        return super().list(request, *args, **kwargs)

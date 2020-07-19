@@ -103,10 +103,18 @@
                     receiver: receiver_id
                 },
             }).done(function (data) {
-                alert('Запрос прошел успешно');
-                console.log(data)
+                let tag_content = "";
+                for(let msg of data){
+                    tag_content += "<p class=\"message_block\">";
+                    tag_content += "<b>" + msg.dt.slice(0, 10) + " " + msg.dt.slice(11, 16) + "</b><br>";
+                    tag_content += "<b>" + msg.sender_name + "</b><br>";
+                    tag_content += msg.text;
+                    tag_content += "</p>";
+                }
+                let messagesBlock = document.getElementById('messages_block');
+                messagesBlock.innerHTML = tag_content
             }).fail(function (data) {
-                alert('Запрос завершался неудачей')
+                alert(`Не удалось получить список сообщений...\n${data.status} ${data.responseJSON.detail}`)
             })
         }
     </script>
