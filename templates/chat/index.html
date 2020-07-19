@@ -97,7 +97,7 @@
         function show(receiver) {
             let sender = {{ user.pk }};
             let current_token = "{{ current_token }}";
-            alert('Выбран пользователь! Отправитель: ' + sender + ' Получатель: ' + receiver + ' Токен: ' + current_token)
+            alert(`Отправитель: ${sender} Получатель: ${receiver} Токен: ${current_token}`)
         }
     </script>
 {% endblock %}

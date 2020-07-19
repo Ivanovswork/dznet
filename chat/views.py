@@ -76,10 +76,12 @@ class MessageView(ListCreateAPIView):
     serializer_class = MessageSerializer
 
     def get_queryset(self):
+        """Пример параметров для запроса: ?sender=2&receiver=7&begin_id=229"""
+
         queryset = Message.objects.all()
 
-        sender_id = self.request.query_params.get('sender_id')
-        receiver_id = self.request.query_params.get('receiver_id')
+        sender_id = self.request.query_params.get('sender')
+        receiver_id = self.request.query_params.get('receiver')
         begin_id = self.request.query_params.get('begin_id')
 
         if sender_id:
