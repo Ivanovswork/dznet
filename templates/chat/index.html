@@ -94,10 +94,20 @@
     {% endif %}
 
     <script>
-        function show(receiver) {
-            let sender = {{ user.pk }};
-            let current_token = "{{ current_token }}";
-            alert(`Отправитель: ${sender} Получатель: ${receiver} Токен: ${current_token}`)
+        function show(receiver_id) {
+            let sender_id = {{ user.pk }};
+            $.ajax("/chat/messages/", {
+                method: 'GET',
+                data: {
+                    sender: sender_id,
+                    receiver: receiver_id
+                },
+            }).done(function (data) {
+                alert('Запрос прошел успешно');
+                console.log(data)
+            }).fail(function (data) {
+                alert('Запрос завершался неудачей')
+            })
         }
     </script>
 {% endblock %}

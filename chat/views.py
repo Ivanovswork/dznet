@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import BasicAuthentication, TokenAuthentication
+from rest_framework.authentication import BasicAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.authtoken.models import Token
@@ -25,12 +25,10 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, 'chat/index.html', context={})
 
-    current_token = get_token(request.user)
     user_list = list(User.objects.all())
     user_list.sort(key=lambda x: x.get_full_name() if x.get_full_name() else x.username)
     context = {
         'user_list': user_list,
-        'current_token': current_token
     }
     return render(request, 'chat/index.html', context=context)
 
@@ -71,7 +69,7 @@ class UserViewSet(ReadOnlyModelViewSet):
 class MessageView(ListCreateAPIView):
     """Контроллер для работы с сообщениями"""
 
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
     permission_classes = (IsAuthenticated,)
     serializer_class = MessageSerializer
 
@@ -92,3 +90,13 @@ class MessageView(ListCreateAPIView):
             queryset = queryset.filter(pk__gt=begin_id)
 
         return queryset
+
+    def list(self, request, *args, **kwargs):
+        # Блок диагностических сообщений
+        # print('Пришел запрос в метод получения списка сообщений...')
+        # print('is_ajax() ', request.is_ajax())
+        # print('META:')
+        # for k, v in request.META.items():
+        #     print('  - ', k, ' = ', v)
+
+        return super().list(request, *args, **kwargs)
