@@ -27,8 +27,10 @@ def index(request):
 
     user_list = list(User.objects.all())
     user_list.sort(key=lambda x: x.get_full_name() if x.get_full_name() else x.username)
+    current_token = get_token(request.user)
     context = {
         'user_list': user_list,
+        'current_token': current_token
     }
     return render(request, 'chat/index.html', context=context)
 

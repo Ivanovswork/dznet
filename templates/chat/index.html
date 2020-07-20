@@ -3,7 +3,7 @@
 {% block content %}
     <style>
         div.inner_div {
-            overflow: scroll;
+            overflow: auto;
             background-color: RGB(255, 255, 255);
             border: 2px solid RGB(220, 220, 220);
             border-radius: 5px;
@@ -85,7 +85,7 @@
             </div>
 
             <div id="sender_block" class="inner_div">
-                <input type="text" size="60" name="message_text">
+                <input type="text" size="60" name="message_text" id="text_field">
                 <button id="send_button" onclick="sendMessage()">Отправить</button>
             </div>
 
@@ -95,10 +95,14 @@
     <script>
         let current_receiver = null;
         let current_sender = {{ user.pk }};
+        let current_token = "{{ current_token }}";
 
-        function show(receiver_id) {
-            //Устанавливаем текущего получателя сообщений
+        setInterval(show, 2000, current_receiver, true);
+
+        function show(receiver_id, onTimer = false) {
             current_receiver = receiver_id;
+            if (!current_receiver) return;
+
             let url = `/chat/messages/?user=${current_sender}&user=${current_receiver}`;
             $.ajax(url, {
                 method: 'GET',
@@ -118,16 +122,50 @@
                 messagesBlock = $('#messages_block');
                 messagesBlock.scrollTop(messagesBlock.prop("scrollHeight"));
             }).fail(function (data) {
-                if (data.status == 0) {
-                    alert("Не удалось получить список сообщений. Сервер недоступен...");
-                } else {
-                    alert(`Не удалось получить список сообщений...\n${data.status} ${data.responseJSON.detail}`);
+                if (!onTimer) {
+                    if (data.status == 0) {
+                        alert("Не удалось получить список сообщений. Сервер недоступен...");
+                    } else {
+                        alert(`Не удалось получить список сообщений...\n${data.status} ${data.responseJSON.detail}`);
+                    }
                 }
             })
         }
 
         function sendMessage() {
-            alert(`Сообщение отправлено! Отправитель: ${current_sender} Получатель: ${current_receiver}`)
+            if (!current_receiver) {
+                alert('Выберите получателя!');
+                return;
+            }
+
+            textField = document.getElementById('text_field');
+            text = textField.value;
+            if (!text) {
+                alert('Введите сообщение для отправки!');
+                return;
+            }
+
+            let url = '/chat/messages/';
+            $.ajax(url, {
+                method: "POST",
+                data: {
+                    sender: current_sender,
+                    receiver: current_receiver,
+                    text: text
+                },
+                headers: {
+                    Authorization: `Token ${current_token}`
+                }
+            }).done(function (data) {
+                show(current_receiver);
+                textField.value = ""
+            }).fail(function (data) {
+                if (data.status == 0) {
+                    alert("Не удалось отправить собщение. Сервер недоступен...");
+                } else {
+                    alert(`Не удалось отправить сообщение...\n${data.status} ${data.responseJSON.detail}`);
+                }
+            });
         }
     </script>
 {% endblock %}
