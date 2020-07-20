@@ -69,7 +69,7 @@
 
             <div id="users_block" class="inner_div">
                 {% for element in user_list %}
-                    <p class="user_block">
+                    <p class="user_block" id="receiver_{{ element.pk }}">
                         <a href="javascript: show({{ element.pk }})">
                             {% if element.first_name or element.last_name %}
                                 {{ element.get_full_name }}
@@ -97,11 +97,27 @@
         let current_sender = {{ user.pk }};
         let current_token = "{{ current_token }}";
 
-        setInterval(show, 2000, current_receiver, true);
+        setInterval(show, 2000, null, true);
 
         function show(receiver_id, onTimer = false) {
-            current_receiver = receiver_id;
-            if (!current_receiver) return;
+            //Если запуск функции произошел по таймеру и получатель не выбран, то просто выходим
+            if (onTimer && !current_receiver) return;
+
+            //Если получатель и отправитель выбраны и отличаются друг от друга, то меняем цвета блоков
+            if (!onTimer && receiver_id != current_receiver) {
+                if (receiver_id) {
+                    nextMsgBlock = document.getElementById(`receiver_${receiver_id}`);
+                    nextMsgBlock.style.backgroundColor = "RGB(200, 240, 240)";
+                }
+                if (current_receiver) {
+                    curMsgBlock = document.getElementById(`receiver_${current_receiver}`);
+                    curMsgBlock.style.backgroundColor = "RGB(240, 240, 240)";
+                }
+            }
+
+            if (receiver_id){
+                current_receiver = receiver_id;
+            }
 
             let url = `/chat/messages/?user=${current_sender}&user=${current_receiver}`;
             $.ajax(url, {
