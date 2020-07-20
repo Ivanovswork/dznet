@@ -111,7 +111,11 @@
                 let messagesBlock = document.getElementById('messages_block');
                 messagesBlock.innerHTML = tag_content
             }).fail(function (data) {
-                alert(`Не удалось получить список сообщений...\n${data.status} ${data.responseJSON.detail}`)
+                if (data.status == 0){
+                    alert("Не удалось получить список сообщений. Сервер недоступен...");
+                } else {
+                    alert(`Не удалось получить список сообщений...\n${data.status} ${data.responseJSON.detail}`);
+                }
             })
         }
     </script>
