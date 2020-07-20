@@ -96,12 +96,9 @@
     <script>
         function show(receiver_id) {
             let sender_id = {{ user.pk }};
-            $.ajax("/chat/messages/", {
+            let url = `/chat/messages/?user=${sender_id}&user=${receiver_id}`;
+            $.ajax(url, {
                 method: 'GET',
-                data: {
-                    sender: sender_id,
-                    receiver: receiver_id
-                },
             }).done(function (data) {
                 let tag_content = "";
                 for(let msg of data){

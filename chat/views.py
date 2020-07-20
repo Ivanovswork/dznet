@@ -74,19 +74,9 @@ class MessageView(ListCreateAPIView):
     serializer_class = MessageSerializer
 
     def get_queryset(self):
-        """Пример параметров для запроса: ?sender=2&receiver=7&begin_id=229"""
-
-        queryset = Message.objects.all()
-
-        sender_id = self.request.query_params.get('sender')
-        receiver_id = self.request.query_params.get('receiver')
-        begin_id = self.request.query_params.get('begin_id')
-
-        if sender_id:
-            queryset = queryset.filter(sender_id=sender_id)
-        if receiver_id:
-            queryset = queryset.filter(receiver_id=receiver_id)
-        if begin_id:
-            queryset = queryset.filter(pk__gt=begin_id)
+        queryset = Message.objects.all().order_by('pk')
+        user_ids = self.request.query_params.getlist('user')
+        if user_ids:
+            queryset = queryset.filter(sender_id__in=user_ids, receiver_id__in=user_ids)
 
         return queryset
