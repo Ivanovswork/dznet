@@ -3,7 +3,7 @@
 {% block content %}
     <style>
         div.inner_div {
-            overflow: auto;
+            overflow: scroll;
             background-color: RGB(255, 255, 255);
             border: 2px solid RGB(220, 220, 220);
             border-radius: 5px;
@@ -82,26 +82,29 @@
             </div>
 
             <div id="messages_block" class="inner_div">
-                Здесь будут выводиться сообщения
             </div>
 
             <div id="sender_block" class="inner_div">
                 <input type="text" size="60" name="message_text">
-                <button id="send_button">Отправить</button>
+                <button id="send_button" onclick="sendMessage()">Отправить</button>
             </div>
 
         </div>
     {% endif %}
 
     <script>
+        let current_receiver = null;
+        let current_sender = {{ user.pk }};
+
         function show(receiver_id) {
-            let sender_id = {{ user.pk }};
-            let url = `/chat/messages/?user=${sender_id}&user=${receiver_id}`;
+            //Устанавливаем текущего получателя сообщений
+            current_receiver = receiver_id;
+            let url = `/chat/messages/?user=${current_sender}&user=${current_receiver}`;
             $.ajax(url, {
                 method: 'GET',
             }).done(function (data) {
                 let tag_content = "";
-                for(let msg of data){
+                for (let msg of data) {
                     tag_content += "<p class=\"message_block\">";
                     tag_content += "<b>" + msg.dt.slice(0, 10) + " " + msg.dt.slice(11, 16) + "</b><br>";
                     tag_content += "<b>" + msg.sender_name + "</b><br>";
@@ -109,14 +112,22 @@
                     tag_content += "</p>";
                 }
                 let messagesBlock = document.getElementById('messages_block');
-                messagesBlock.innerHTML = tag_content
+                messagesBlock.innerHTML = tag_content;
+
+                //Сразу же прокручиваем окно с сообщениями вниз
+                messagesBlock = $('#messages_block');
+                messagesBlock.scrollTop(messagesBlock.prop("scrollHeight"));
             }).fail(function (data) {
-                if (data.status == 0){
+                if (data.status == 0) {
                     alert("Не удалось получить список сообщений. Сервер недоступен...");
                 } else {
                     alert(`Не удалось получить список сообщений...\n${data.status} ${data.responseJSON.detail}`);
                 }
             })
+        }
+
+        function sendMessage() {
+            alert(`Сообщение отправлено! Отправитель: ${current_sender} Получатель: ${current_receiver}`)
         }
     </script>
 {% endblock %}
