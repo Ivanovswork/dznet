@@ -40,7 +40,7 @@ class Login(LoginView):
 
 
 class Logout(LogoutView):
-    next_page = 'index'
+    template_name = 'chat/login.html'
 
 
 # REST-Api

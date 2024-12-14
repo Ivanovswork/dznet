@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'fzxkuz3y+i3f%+414$n#tl1mthbelkj49op=s(0!0*(fjmyia4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition
@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'PyChat.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        "NAME": "test_db",
+        "USER": "postgres",
+        "PASSWORD": "1654",
+        "HOST": "localhost",
+        "PORT": "5432"
     }
 }
 
